@@ -1,7 +1,9 @@
-package com.in28minutes.learn_spring_framework;
+package com.in28minutes.learn_spring_framework.helloworld;
 
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean; //indicates that a method produces a bean to be managed by a Spring Container
 import org.springframework.context.annotation.Configuration; //indicates that the class would have @bean methods to be implemented
+import org.springframework.context.annotation.Primary; //indicates the use of primary for prioritizing a bean
 
 //Record helps in creating the constructor of a separately undefined class
 //Eliminate verbosity in creating Java Beans
@@ -35,16 +37,24 @@ public class HelloWorldConfiguration {
         return person;
     }
 
-    @Bean(name = "address2")
+    @Bean(name = "address1")
     public Address address() {
         return new Address("2054 N Beverly plaza", "Long Beach");
     }
 
     //We are referring Address.class in the Main method, so only one method returning Address is allowed
-//    @Bean
-//    public Address address3() {
-//        return new Address("1180 Reed Ave", "San Jose");
-//    }
+    @Bean
+    @Qualifier("address2Qualifier")
+    public Address address2() {
+        return new Address("1180 Reed Ave", "San Jose");
+    }
+
+    @Bean
+    //Used to give address3 the priority when referred with return type of the bean in the main class
+    @Primary
+    public Address address3() {
+        return new Address("2054 N Beverly plaza", "Long Beach");
+    }
 
     //Calling existing beans within another bean
     @Bean
@@ -56,8 +66,15 @@ public class HelloWorldConfiguration {
     //Note: for sudonames of beans, while passing as parameters use sudonames and while calling the method use the method name
     //A way of auto-wiring/injecting the beans
     @Bean
-    public Person personByParameter(String name, int age, Address address2) {//Beans: name, age and address2 passed as parameters, names should match correctly
-        return new Person(name,age, address2);
+    public Person personByParameter(String name, int age, Address address) {//Beans: name, age and address2 passed as parameters, bean names should match correctly
+        return new Person(name,age, address);
+    }
+
+    //Qualifier AutoWiring uses the Primary tagged bean
+    //there are two beans with Address return type and with the primary tag, we specify which one to pick
+    @Bean
+    public Person personByQualifierParameter(String name, int age, @Qualifier("address2Qualifier") Address address) {//Beans: name, age and address2 passed as parameters, bean names should match correctly
+        return new Person(name,age, address);
     }
 }
 

@@ -1,11 +1,12 @@
-package com.in28minutes.learn_spring_framework;
+package com.in28minutes.learn_spring_framework.game;
 
 import com.in28minutes.learn_spring_framework.game.*;
 
 public class App01GamingBasicJava {
     public static void main(String[] args) {
 //        Tight Coupling demonstration
-//        Object Creation
+//        Object Creation for MarioGame using var
+        //Since we use var all the methods in MarioGame() can be accessed, including the interface methods
         var marioGame = new MarioGame();
         var superContraGame = new SuperContraGame();
         var pacmanGame = new PacmanGame();
@@ -18,7 +19,7 @@ public class App01GamingBasicJava {
 //        this is after the implementation of interface
 //        No need to change the Objects in GameRunner class as we used interface there
 //        Just change the object passed into the GameRunner Constructor to execute the respective implementation
-        var gameRunner = new GameRunner(pacmanGame); //Object Creation + Wiring the dependency object of any type of game
+        var gameRunner = new GameRunner(marioGame); //Object Creation + Wiring the dependency object of any type of game
         gameRunner.run();
     }
 }
